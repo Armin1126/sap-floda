@@ -1,0 +1,1 @@
+import {useQuery} from '@tanstack/react-query'; import {flodaApi} from '../../services/flodaApi'; import {polling} from '../../hooks/usePolling'; export const useLatestChokepoint=()=>useQuery({queryKey:['chokepoints'],queryFn:flodaApi.chokepoints,...polling})

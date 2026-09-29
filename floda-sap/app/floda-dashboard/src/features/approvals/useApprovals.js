@@ -1,0 +1,1 @@
+import {useQuery} from '@tanstack/react-query'; import {flodaApi} from '../../services/flodaApi'; import {polling} from '../../hooks/usePolling'; export const useApprovals=()=>useQuery({queryKey:['approvals'],queryFn:flodaApi.approvals,...polling})

@@ -1,0 +1,1 @@
+import {Badge} from '../ui'; export default function StatusBadge({status}){const s=String(status||'').toLowerCase();const kind=s.includes('reject')?'danger':s.includes('pending')||s.includes('escalat')?'warning':s.includes('auto')||s==='y'||s.includes('approved')?'success':'neutral';return <Badge kind={kind}>{status}</Badge>}

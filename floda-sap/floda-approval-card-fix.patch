@@ -1,0 +1,98 @@
+From b82f55999c209f3a008a5b1133fefcbb51fc47ce Mon Sep 17 00:00:00 2001
+From: Armin1126 <sriramanuja02006@gmail.com>
+Date: Mon, 28 Sep 2026 10:00:51 +0000
+Subject: [PATCH] Gate approval card inputs behind an explicit decision
+
+Reviewer-name and rejection-reason fields rendered on every queued card,
+so a queue of three escalations showed six idle text inputs. The reviewer
+now sees the allocation and two buttons; the fields appear only after
+Approve or Reject is chosen, and the reason field only for rejections.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01QQSVmJVtgNeLxwdWGkETp8
+---
+ .../src/features/approvals/ApprovalCard.jsx   | 68 +++++++++++++++++--
+ 1 file changed, 64 insertions(+), 4 deletions(-)
+
+diff --git a/app/floda-dashboard/src/features/approvals/ApprovalCard.jsx b/app/floda-dashboard/src/features/approvals/ApprovalCard.jsx
+index 6df46ff..dc5c32c 100644
+--- a/app/floda-dashboard/src/features/approvals/ApprovalCard.jsx
++++ b/app/floda-dashboard/src/features/approvals/ApprovalCard.jsx
+@@ -5,10 +5,70 @@ import { score } from '../../utils/formatters';
+ import { toast } from 'sonner';
+ 
+ export default function ApprovalCard({ ranking, manifest, onApprove, onReject, pending }) {
++  // null = idle (buttons only). 'approve' | 'reject' = reviewer is committing to a decision.
++  const [mode, setMode] = useState(null);
+   const [name, setName] = useState('Supply Chain Lead');
+   const [reason, setReason] = useState('');
+-  const escalation = [ranking.priority_rank === 1 && 'Top priority', manifest?.carriage_constraint === 'hazmat' && 'Hazmat cargo', Number(manifest?.weight_kg) > 10000 && 'Heavy shipment'].filter(Boolean).join(' · ') || 'Policy guardrail';
+-  const approve = () => { if (!name.trim()) return toast.error('Enter reviewer name'); onApprove({ id: ranking.ranking_id, name }); };
+-  const reject = () => { if (!name.trim()) return toast.error('Enter reviewer name'); if (!reason.trim()) return toast.error('Enter a rejection reason'); onReject({ id: ranking.ranking_id, name, reason }); };
+-  return <article className="approval"><div><b>{manifest?.commodity_type || ranking.manifest_id}</b><small>#{ranking.priority_rank} · Score {score(ranking.composite_score)}</small><p>{escalation}</p></div><StatusBadge status="Pending Approval"/><div className="approval-inputs"><input value={name} onChange={event => setName(event.target.value)} placeholder="Reviewer name"/><input value={reason} onChange={event => setReason(event.target.value)} placeholder="Reason if rejecting"/></div><div className="actions"><Button disabled={pending} onClick={approve}>Approve</Button><Button disabled={pending} variant="danger" onClick={reject}>Reject</Button></div></article>;
++
++  const escalation = [
++    ranking.priority_rank === 1 && 'Top priority',
++    manifest?.carriage_constraint === 'hazmat' && 'Hazmat cargo',
++    Number(manifest?.weight_kg) > 10000 && 'Heavy shipment'
++  ].filter(Boolean).join(' · ') || 'Policy guardrail';
++
++  const cancel = () => { setMode(null); setReason(''); };
++
++  const confirm = () => {
++    if (!name.trim()) return toast.error('Enter reviewer name');
++    if (mode === 'reject' && !reason.trim()) return toast.error('Enter a rejection reason');
++    if (mode === 'approve') onApprove({ id: ranking.ranking_id, name });
++    else onReject({ id: ranking.ranking_id, name, reason });
++  };
++
++  return (
++    <article className="approval">
++      <div>
++        <b>{manifest?.commodity_type || ranking.manifest_id}</b>
++        <small>#{ranking.priority_rank} · Score {score(ranking.composite_score)}</small>
++        <p>{escalation}</p>
++      </div>
++
++      <StatusBadge status="Pending Approval" />
++
++      {mode === null ? (
++        <div className="actions">
++          <Button disabled={pending} onClick={() => setMode('approve')}>Approve</Button>
++          <Button disabled={pending} variant="danger" onClick={() => setMode('reject')}>Reject</Button>
++        </div>
++      ) : (
++        <>
++          <div className="approval-inputs">
++            <input
++              autoFocus
++              value={name}
++              onChange={event => setName(event.target.value)}
++              placeholder="Reviewer name"
++            />
++            {mode === 'reject' && (
++              <input
++                value={reason}
++                onChange={event => setReason(event.target.value)}
++                placeholder="Reason for rejection"
++              />
++            )}
++          </div>
++          <div className="actions">
++            <Button
++              disabled={pending}
++              variant={mode === 'reject' ? 'danger' : undefined}
++              onClick={confirm}
++            >
++              {mode === 'reject' ? 'Confirm rejection' : 'Confirm approval'}
++            </Button>
++            <Button disabled={pending} variant="outline" onClick={cancel}>Cancel</Button>
++          </div>
++        </>
++      )}
++    </article>
++  );
+ }
+-- 
+2.43.0
+

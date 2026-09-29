@@ -1,0 +1,11 @@
+node_modules/
+.env
+.env.local
+db.sqlite
+dist/
+.DS_Store
+.vscode/
+*.log
+db.sqlite-shm
+db.sqlite-wal
+db.sqlite-journal

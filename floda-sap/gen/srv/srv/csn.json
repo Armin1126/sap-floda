@@ -1,0 +1,628 @@
+{
+  "namespace": "floda.hackathon",
+  "definitions": {
+    "floda.hackathon.Manifests": {
+      "kind": "entity",
+      "elements": {
+        "manifest_id": {
+          "key": true,
+          "type": "cds.String"
+        },
+        "commodity_type": {
+          "type": "cds.String"
+        },
+        "origin": {
+          "type": "cds.String"
+        },
+        "destination": {
+          "type": "cds.String"
+        },
+        "weight_kg": {
+          "type": "cds.Decimal",
+          "precision": 10,
+          "scale": 2
+        },
+        "volume_cbm": {
+          "type": "cds.Decimal",
+          "precision": 10,
+          "scale": 2
+        },
+        "substitutability": {
+          "type": "cds.Decimal",
+          "precision": 3,
+          "scale": 2
+        },
+        "cover_clock_hours": {
+          "type": "cds.Integer"
+        },
+        "degradation_clock_hours": {
+          "type": "cds.Integer"
+        },
+        "carriage_constraint": {
+          "type": "cds.String"
+        },
+        "composite_score": {
+          "type": "cds.Decimal",
+          "precision": 5,
+          "scale": 3
+        },
+        "status": {
+          "type": "cds.String"
+        },
+        "created_at": {
+          "type": "cds.Timestamp"
+        }
+      }
+    },
+    "floda.hackathon.Chokepoints": {
+      "kind": "entity",
+      "elements": {
+        "chokepoint_id": {
+          "key": true,
+          "type": "cds.String"
+        },
+        "location": {
+          "type": "cds.String"
+        },
+        "chokepoint_type": {
+          "type": "cds.String"
+        },
+        "severity": {
+          "type": "cds.String"
+        },
+        "affected_routes": {
+          "type": "cds.String"
+        },
+        "capacity_reduction_percent": {
+          "type": "cds.Integer"
+        },
+        "estimated_resolution_hours": {
+          "type": "cds.Integer"
+        },
+        "status": {
+          "type": "cds.String"
+        },
+        "created_at": {
+          "type": "cds.Timestamp"
+        }
+      }
+    },
+    "floda.hackathon.Rankings": {
+      "kind": "entity",
+      "elements": {
+        "ranking_id": {
+          "key": true,
+          "type": "cds.String"
+        },
+        "manifest_id": {
+          "type": "cds.String"
+        },
+        "chokepoint_id": {
+          "type": "cds.String"
+        },
+        "priority_rank": {
+          "type": "cds.Integer"
+        },
+        "composite_score": {
+          "type": "cds.Decimal"
+        },
+        "substitutability_score": {
+          "type": "cds.Decimal"
+        },
+        "cover_clock_score": {
+          "type": "cds.Decimal"
+        },
+        "degradation_clock_score": {
+          "type": "cds.Decimal"
+        },
+        "carriage_fit_score": {
+          "type": "cds.Decimal"
+        },
+        "allocated": {
+          "type": "cds.String"
+        },
+        "requires_approval": {
+          "type": "cds.Boolean"
+        },
+        "approval_status": {
+          "type": "cds.String"
+        },
+        "approved_by": {
+          "type": "cds.String"
+        },
+        "approved_at": {
+          "type": "cds.DateTime"
+        },
+        "created_at": {
+          "type": "cds.DateTime"
+        }
+      }
+    },
+    "floda.hackathon.AuditLog": {
+      "kind": "entity",
+      "elements": {
+        "log_id": {
+          "key": true,
+          "type": "cds.String"
+        },
+        "ranking_id": {
+          "type": "cds.String"
+        },
+        "action": {
+          "type": "cds.String"
+        },
+        "decision_rationale": {
+          "type": "cds.String"
+        },
+        "parameter_values": {
+          "type": "cds.String"
+        },
+        "timestamp": {
+          "type": "cds.Timestamp"
+        },
+        "actor": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "floda.hackathon.InventoryPlans": {
+      "kind": "entity",
+      "elements": {
+        "plan_id": {
+          "key": true,
+          "type": "cds.String"
+        },
+        "chokepoint_id": {
+          "type": "cds.String"
+        },
+        "commodity_type": {
+          "type": "cds.String"
+        },
+        "recommended_safety_stock_delta": {
+          "type": "cds.Integer"
+        },
+        "rationale": {
+          "type": "cds.String"
+        },
+        "created_at": {
+          "type": "cds.DateTime"
+        }
+      }
+    },
+    "RankingService": {
+      "@source": "srv/ranking-service.cds",
+      "kind": "service"
+    },
+    "RankingService.Manifests": {
+      "kind": "entity",
+      "projection": {
+        "from": {
+          "ref": [
+            "floda.hackathon.Manifests"
+          ]
+        }
+      },
+      "elements": {
+        "manifest_id": {
+          "key": true,
+          "type": "cds.String"
+        },
+        "commodity_type": {
+          "type": "cds.String"
+        },
+        "origin": {
+          "type": "cds.String"
+        },
+        "destination": {
+          "type": "cds.String"
+        },
+        "weight_kg": {
+          "type": "cds.Decimal",
+          "precision": 10,
+          "scale": 2
+        },
+        "volume_cbm": {
+          "type": "cds.Decimal",
+          "precision": 10,
+          "scale": 2
+        },
+        "substitutability": {
+          "type": "cds.Decimal",
+          "precision": 3,
+          "scale": 2
+        },
+        "cover_clock_hours": {
+          "type": "cds.Integer"
+        },
+        "degradation_clock_hours": {
+          "type": "cds.Integer"
+        },
+        "carriage_constraint": {
+          "type": "cds.String"
+        },
+        "composite_score": {
+          "type": "cds.Decimal",
+          "precision": 5,
+          "scale": 3
+        },
+        "status": {
+          "type": "cds.String"
+        },
+        "created_at": {
+          "type": "cds.Timestamp"
+        }
+      }
+    },
+    "RankingService.Chokepoints": {
+      "kind": "entity",
+      "projection": {
+        "from": {
+          "ref": [
+            "floda.hackathon.Chokepoints"
+          ]
+        }
+      },
+      "elements": {
+        "chokepoint_id": {
+          "key": true,
+          "type": "cds.String"
+        },
+        "location": {
+          "type": "cds.String"
+        },
+        "chokepoint_type": {
+          "type": "cds.String"
+        },
+        "severity": {
+          "type": "cds.String"
+        },
+        "affected_routes": {
+          "type": "cds.String"
+        },
+        "capacity_reduction_percent": {
+          "type": "cds.Integer"
+        },
+        "estimated_resolution_hours": {
+          "type": "cds.Integer"
+        },
+        "status": {
+          "type": "cds.String"
+        },
+        "created_at": {
+          "type": "cds.Timestamp"
+        }
+      }
+    },
+    "RankingService.Rankings": {
+      "kind": "entity",
+      "projection": {
+        "from": {
+          "ref": [
+            "floda.hackathon.Rankings"
+          ]
+        }
+      },
+      "elements": {
+        "ranking_id": {
+          "key": true,
+          "type": "cds.String"
+        },
+        "manifest_id": {
+          "type": "cds.String"
+        },
+        "chokepoint_id": {
+          "type": "cds.String"
+        },
+        "priority_rank": {
+          "type": "cds.Integer"
+        },
+        "composite_score": {
+          "type": "cds.Decimal"
+        },
+        "substitutability_score": {
+          "type": "cds.Decimal"
+        },
+        "cover_clock_score": {
+          "type": "cds.Decimal"
+        },
+        "degradation_clock_score": {
+          "type": "cds.Decimal"
+        },
+        "carriage_fit_score": {
+          "type": "cds.Decimal"
+        },
+        "allocated": {
+          "type": "cds.String"
+        },
+        "requires_approval": {
+          "type": "cds.Boolean"
+        },
+        "approval_status": {
+          "type": "cds.String"
+        },
+        "approved_by": {
+          "type": "cds.String"
+        },
+        "approved_at": {
+          "type": "cds.DateTime"
+        },
+        "created_at": {
+          "type": "cds.DateTime"
+        }
+      }
+    },
+    "RankingService.AuditLog": {
+      "kind": "entity",
+      "projection": {
+        "from": {
+          "ref": [
+            "floda.hackathon.AuditLog"
+          ]
+        }
+      },
+      "elements": {
+        "log_id": {
+          "key": true,
+          "type": "cds.String"
+        },
+        "ranking_id": {
+          "type": "cds.String"
+        },
+        "action": {
+          "type": "cds.String"
+        },
+        "decision_rationale": {
+          "type": "cds.String"
+        },
+        "parameter_values": {
+          "type": "cds.String"
+        },
+        "timestamp": {
+          "type": "cds.Timestamp"
+        },
+        "actor": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "RankingService.InventoryPlans": {
+      "kind": "entity",
+      "projection": {
+        "from": {
+          "ref": [
+            "floda.hackathon.InventoryPlans"
+          ]
+        }
+      },
+      "elements": {
+        "plan_id": {
+          "key": true,
+          "type": "cds.String"
+        },
+        "chokepoint_id": {
+          "type": "cds.String"
+        },
+        "commodity_type": {
+          "type": "cds.String"
+        },
+        "recommended_safety_stock_delta": {
+          "type": "cds.Integer"
+        },
+        "rationale": {
+          "type": "cds.String"
+        },
+        "created_at": {
+          "type": "cds.DateTime"
+        }
+      }
+    },
+    "RankingService.ingestManifest": {
+      "kind": "action",
+      "params": {
+        "commodity_type": {
+          "type": "cds.String"
+        },
+        "origin": {
+          "type": "cds.String"
+        },
+        "destination": {
+          "type": "cds.String"
+        },
+        "weight_kg": {
+          "type": "cds.Decimal"
+        },
+        "volume_cbm": {
+          "type": "cds.Decimal"
+        },
+        "substitutability": {
+          "type": "cds.Decimal"
+        },
+        "cover_clock_hours": {
+          "type": "cds.Integer"
+        },
+        "degradation_clock_hours": {
+          "type": "cds.Integer"
+        },
+        "carriage_constraint": {
+          "type": "cds.String"
+        }
+      },
+      "returns": {
+        "elements": {
+          "success": {
+            "type": "cds.Boolean"
+          },
+          "manifest_id": {
+            "type": "cds.String"
+          },
+          "message": {
+            "type": "cds.String"
+          }
+        }
+      }
+    },
+    "RankingService.ingestChokepoint": {
+      "kind": "action",
+      "params": {
+        "location": {
+          "type": "cds.String"
+        },
+        "chokepoint_type": {
+          "type": "cds.String"
+        },
+        "severity": {
+          "type": "cds.String"
+        },
+        "affected_routes": {
+          "type": "cds.String"
+        },
+        "capacity_reduction_percent": {
+          "type": "cds.Integer"
+        },
+        "estimated_resolution_hours": {
+          "type": "cds.Integer"
+        }
+      },
+      "returns": {
+        "elements": {
+          "success": {
+            "type": "cds.Boolean"
+          },
+          "chokepoint_id": {
+            "type": "cds.String"
+          },
+          "message": {
+            "type": "cds.String"
+          }
+        }
+      }
+    },
+    "RankingService.rankedManifests": {
+      "kind": "function",
+      "returns": {
+        "items": {
+          "type": "RankingService.Rankings"
+        }
+      }
+    },
+    "RankingService.inventoryRecommendations": {
+      "kind": "function",
+      "returns": {
+        "items": {
+          "type": "RankingService.InventoryPlans"
+        }
+      }
+    },
+    "RankingService.DemoScenario": {
+      "kind": "type",
+      "elements": {
+        "manifest_id": {
+          "type": "cds.String"
+        },
+        "commodity_type": {
+          "type": "cds.String"
+        },
+        "weight_kg": {
+          "type": "cds.Decimal"
+        },
+        "volume_cbm": {
+          "type": "cds.Decimal"
+        },
+        "substitutability": {
+          "type": "cds.Decimal"
+        },
+        "cover_clock_hours": {
+          "type": "cds.Integer"
+        },
+        "degradation_clock_hours": {
+          "type": "cds.Integer"
+        },
+        "carriage_constraint": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "RankingService.SeedResult": {
+      "kind": "type",
+      "elements": {
+        "success": {
+          "type": "cds.Boolean"
+        },
+        "message": {
+          "type": "cds.String"
+        },
+        "manifests_loaded": {
+          "type": "cds.Integer"
+        },
+        "chokepoints_loaded": {
+          "type": "cds.Integer"
+        }
+      }
+    },
+    "RankingService.ApprovalResult": {
+      "kind": "type",
+      "elements": {
+        "success": {
+          "type": "cds.Boolean"
+        },
+        "message": {
+          "type": "cds.String"
+        },
+        "ranking_id": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "RankingService.approveAllocation": {
+      "kind": "action",
+      "params": {
+        "ranking_id": {
+          "type": "cds.String"
+        },
+        "approver_name": {
+          "type": "cds.String"
+        }
+      },
+      "returns": {
+        "type": "RankingService.ApprovalResult"
+      }
+    },
+    "RankingService.rejectAllocation": {
+      "kind": "action",
+      "params": {
+        "ranking_id": {
+          "type": "cds.String"
+        },
+        "approver_name": {
+          "type": "cds.String"
+        },
+        "reason": {
+          "type": "cds.String"
+        }
+      },
+      "returns": {
+        "type": "RankingService.ApprovalResult"
+      }
+    },
+    "RankingService.pendingApprovals": {
+      "kind": "function",
+      "returns": {
+        "items": {
+          "type": "RankingService.Rankings"
+        }
+      }
+    },
+    "RankingService.resetAndSeed": {
+      "kind": "action",
+      "returns": {
+        "type": "RankingService.SeedResult"
+      }
+    }
+  },
+  "meta": {
+    "creator": "CDS Compiler v7.1.1",
+    "compilerCsnFlavor": "inferred",
+    "flavor": "inferred"
+  },
+  "$version": "2.0"
+}

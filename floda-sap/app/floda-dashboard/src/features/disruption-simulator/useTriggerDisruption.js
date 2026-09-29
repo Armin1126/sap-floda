@@ -1,0 +1,1 @@
+import {useMutation,useQueryClient} from '@tanstack/react-query'; import {flodaApi} from '../../services/flodaApi'; export const useTriggerDisruption=()=>{const q=useQueryClient();return useMutation({mutationFn:flodaApi.trigger,onSuccess:()=>q.invalidateQueries()})}

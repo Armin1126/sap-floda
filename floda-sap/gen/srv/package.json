@@ -1,0 +1,34 @@
+{
+  "name": "floda-hackathon",
+  "version": "1.0.0",
+  "description": "FLODA - Multi-party logistics commons for SAP Hackfest 2026",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@cap-js/hana": "^3",
+    "@sap/cds": "^10.1.1",
+    "express": "^4",
+    "uuid": "^14.0.2"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^3.1.1"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sqlite",
+        "credentials": {
+          "url": "db.sqlite"
+        }
+      },
+      "queue": false
+    }
+  },
+  "engines": {
+    "node": "^24"
+  }
+}

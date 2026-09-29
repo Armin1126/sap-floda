@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="RankingService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <Annotation Term="Core.Links">
+        <Collection>
+          <Record>
+            <PropertyValue Property="rel" String="author"/>
+            <PropertyValue Property="href" String="https://cap.cloud.sap"/>
+          </Record>
+        </Collection>
+      </Annotation>
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="Manifests" EntityType="RankingService.Manifests"/>
+        <EntitySet Name="Chokepoints" EntityType="RankingService.Chokepoints"/>
+        <EntitySet Name="Rankings" EntityType="RankingService.Rankings"/>
+        <EntitySet Name="AuditLog" EntityType="RankingService.AuditLog"/>
+        <EntitySet Name="InventoryPlans" EntityType="RankingService.InventoryPlans"/>
+        <ActionImport Name="ingestManifest" Action="RankingService.ingestManifest"/>
+        <ActionImport Name="ingestChokepoint" Action="RankingService.ingestChokepoint"/>
+        <FunctionImport Name="rankedManifests" Function="RankingService.rankedManifests" EntitySet="Rankings"/>
+        <FunctionImport Name="inventoryRecommendations" Function="RankingService.inventoryRecommendations" EntitySet="InventoryPlans"/>
+        <ActionImport Name="approveAllocation" Action="RankingService.approveAllocation"/>
+        <ActionImport Name="rejectAllocation" Action="RankingService.rejectAllocation"/>
+        <FunctionImport Name="pendingApprovals" Function="RankingService.pendingApprovals" EntitySet="Rankings"/>
+        <ActionImport Name="resetAndSeed" Action="RankingService.resetAndSeed"/>
+      </EntityContainer>
+      <EntityType Name="Manifests">
+        <Key>
+          <PropertyRef Name="manifest_id"/>
+        </Key>
+        <Property Name="manifest_id" Type="Edm.String" Nullable="false"/>
+        <Property Name="commodity_type" Type="Edm.String"/>
+        <Property Name="origin" Type="Edm.String"/>
+        <Property Name="destination" Type="Edm.String"/>
+        <Property Name="weight_kg" Type="Edm.Decimal" Precision="10" Scale="2"/>
+        <Property Name="volume_cbm" Type="Edm.Decimal" Precision="10" Scale="2"/>
+        <Property Name="substitutability" Type="Edm.Decimal" Precision="3" Scale="2"/>
+        <Property Name="cover_clock_hours" Type="Edm.Int32"/>
+        <Property Name="degradation_clock_hours" Type="Edm.Int32"/>
+        <Property Name="carriage_constraint" Type="Edm.String"/>
+        <Property Name="composite_score" Type="Edm.Decimal" Precision="5" Scale="3"/>
+        <Property Name="status" Type="Edm.String"/>
+        <Property Name="created_at" Type="Edm.DateTimeOffset" Precision="7"/>
+      </EntityType>
+      <EntityType Name="Chokepoints">
+        <Key>
+          <PropertyRef Name="chokepoint_id"/>
+        </Key>
+        <Property Name="chokepoint_id" Type="Edm.String" Nullable="false"/>
+        <Property Name="location" Type="Edm.String"/>
+        <Property Name="chokepoint_type" Type="Edm.String"/>
+        <Property Name="severity" Type="Edm.String"/>
+        <Property Name="affected_routes" Type="Edm.String"/>
+        <Property Name="capacity_reduction_percent" Type="Edm.Int32"/>
+        <Property Name="estimated_resolution_hours" Type="Edm.Int32"/>
+        <Property Name="status" Type="Edm.String"/>
+        <Property Name="created_at" Type="Edm.DateTimeOffset" Precision="7"/>
+      </EntityType>
+      <EntityType Name="Rankings">
+        <Key>
+          <PropertyRef Name="ranking_id"/>
+        </Key>
+        <Property Name="ranking_id" Type="Edm.String" Nullable="false"/>
+        <Property Name="manifest_id" Type="Edm.String"/>
+        <Property Name="chokepoint_id" Type="Edm.String"/>
+        <Property Name="priority_rank" Type="Edm.Int32"/>
+        <Property Name="composite_score" Type="Edm.Decimal" Scale="variable"/>
+        <Property Name="substitutability_score" Type="Edm.Decimal" Scale="variable"/>
+        <Property Name="cover_clock_score" Type="Edm.Decimal" Scale="variable"/>
+        <Property Name="degradation_clock_score" Type="Edm.Decimal" Scale="variable"/>
+        <Property Name="carriage_fit_score" Type="Edm.Decimal" Scale="variable"/>
+        <Property Name="allocated" Type="Edm.String"/>
+        <Property Name="requires_approval" Type="Edm.Boolean"/>
+        <Property Name="approval_status" Type="Edm.String"/>
+        <Property Name="approved_by" Type="Edm.String"/>
+        <Property Name="approved_at" Type="Edm.DateTimeOffset"/>
+        <Property Name="created_at" Type="Edm.DateTimeOffset"/>
+      </EntityType>
+      <EntityType Name="AuditLog">
+        <Key>
+          <PropertyRef Name="log_id"/>
+        </Key>
+        <Property Name="log_id" Type="Edm.String" Nullable="false"/>
+        <Property Name="ranking_id" Type="Edm.String"/>
+        <Property Name="action" Type="Edm.String"/>
+        <Property Name="decision_rationale" Type="Edm.String"/>
+        <Property Name="parameter_values" Type="Edm.String"/>
+        <Property Name="timestamp" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="actor" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="InventoryPlans">
+        <Key>
+          <PropertyRef Name="plan_id"/>
+        </Key>
+        <Property Name="plan_id" Type="Edm.String" Nullable="false"/>
+        <Property Name="chokepoint_id" Type="Edm.String"/>
+        <Property Name="commodity_type" Type="Edm.String"/>
+        <Property Name="recommended_safety_stock_delta" Type="Edm.Int32"/>
+        <Property Name="rationale" Type="Edm.String"/>
+        <Property Name="created_at" Type="Edm.DateTimeOffset"/>
+      </EntityType>
+      <ComplexType Name="DemoScenario">
+        <Property Name="manifest_id" Type="Edm.String"/>
+        <Property Name="commodity_type" Type="Edm.String"/>
+        <Property Name="weight_kg" Type="Edm.Decimal" Scale="variable"/>
+        <Property Name="volume_cbm" Type="Edm.Decimal" Scale="variable"/>
+        <Property Name="substitutability" Type="Edm.Decimal" Scale="variable"/>
+        <Property Name="cover_clock_hours" Type="Edm.Int32"/>
+        <Property Name="degradation_clock_hours" Type="Edm.Int32"/>
+        <Property Name="carriage_constraint" Type="Edm.String"/>
+      </ComplexType>
+      <ComplexType Name="SeedResult">
+        <Property Name="success" Type="Edm.Boolean"/>
+        <Property Name="message" Type="Edm.String"/>
+        <Property Name="manifests_loaded" Type="Edm.Int32"/>
+        <Property Name="chokepoints_loaded" Type="Edm.Int32"/>
+      </ComplexType>
+      <ComplexType Name="ApprovalResult">
+        <Property Name="success" Type="Edm.Boolean"/>
+        <Property Name="message" Type="Edm.String"/>
+        <Property Name="ranking_id" Type="Edm.String"/>
+      </ComplexType>
+      <ComplexType Name="return_RankingService_ingestManifest">
+        <Property Name="success" Type="Edm.Boolean"/>
+        <Property Name="manifest_id" Type="Edm.String"/>
+        <Property Name="message" Type="Edm.String"/>
+      </ComplexType>
+      <ComplexType Name="return_RankingService_ingestChokepoint">
+        <Property Name="success" Type="Edm.Boolean"/>
+        <Property Name="chokepoint_id" Type="Edm.String"/>
+        <Property Name="message" Type="Edm.String"/>
+      </ComplexType>
+      <Action Name="ingestManifest" IsBound="false">
+        <Parameter Name="commodity_type" Type="Edm.String"/>
+        <Parameter Name="origin" Type="Edm.String"/>
+        <Parameter Name="destination" Type="Edm.String"/>
+        <Parameter Name="weight_kg" Type="Edm.Decimal" Scale="variable"/>
+        <Parameter Name="volume_cbm" Type="Edm.Decimal" Scale="variable"/>
+        <Parameter Name="substitutability" Type="Edm.Decimal" Scale="variable"/>
+        <Parameter Name="cover_clock_hours" Type="Edm.Int32"/>
+        <Parameter Name="degradation_clock_hours" Type="Edm.Int32"/>
+        <Parameter Name="carriage_constraint" Type="Edm.String"/>
+        <ReturnType Type="RankingService.return_RankingService_ingestManifest"/>
+      </Action>
+      <Action Name="ingestChokepoint" IsBound="false">
+        <Parameter Name="location" Type="Edm.String"/>
+        <Parameter Name="chokepoint_type" Type="Edm.String"/>
+        <Parameter Name="severity" Type="Edm.String"/>
+        <Parameter Name="affected_routes" Type="Edm.String"/>
+        <Parameter Name="capacity_reduction_percent" Type="Edm.Int32"/>
+        <Parameter Name="estimated_resolution_hours" Type="Edm.Int32"/>
+        <ReturnType Type="RankingService.return_RankingService_ingestChokepoint"/>
+      </Action>
+      <Function Name="rankedManifests" IsBound="false" IsComposable="false">
+        <ReturnType Type="Collection(RankingService.Rankings)"/>
+      </Function>
+      <Function Name="inventoryRecommendations" IsBound="false" IsComposable="false">
+        <ReturnType Type="Collection(RankingService.InventoryPlans)"/>
+      </Function>
+      <Action Name="approveAllocation" IsBound="false">
+        <Parameter Name="ranking_id" Type="Edm.String"/>
+        <Parameter Name="approver_name" Type="Edm.String"/>
+        <ReturnType Type="RankingService.ApprovalResult"/>
+      </Action>
+      <Action Name="rejectAllocation" IsBound="false">
+        <Parameter Name="ranking_id" Type="Edm.String"/>
+        <Parameter Name="approver_name" Type="Edm.String"/>
+        <Parameter Name="reason" Type="Edm.String"/>
+        <ReturnType Type="RankingService.ApprovalResult"/>
+      </Action>
+      <Function Name="pendingApprovals" IsBound="false" IsComposable="false">
+        <ReturnType Type="Collection(RankingService.Rankings)"/>
+      </Function>
+      <Action Name="resetAndSeed" IsBound="false">
+        <ReturnType Type="RankingService.SeedResult"/>
+      </Action>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

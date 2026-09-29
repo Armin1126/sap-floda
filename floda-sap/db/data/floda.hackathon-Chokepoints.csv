@@ -1,0 +1,21 @@
+chokepoint_id,location,chokepoint_type,severity,affected_routes,capacity_reduction_percent,estimated_resolution_hours,status,created_at
+CP_IND_001,Nhava Sheva (JNPT) Mumbai,port_congestion,critical,"India-Gulf Route,India-Europe Route",72,48,active,2026-09-28T02:10:00Z
+CP_IND_002,Chennai Port,cyclone_warning,critical,"India-Singapore Route,India-SE Asia Route",88,72,active,2026-09-28T03:05:00Z
+CP_IND_003,Mundra Port Gujarat,berth_unavailability,high,"India-Europe Route,India-Gulf Route",61,36,active,2026-09-28T01:40:00Z
+CP_IND_004,Kolkata (Syama Prasad Mookerjee Port),channel_siltation,high,"India-Bangladesh Route,Bay of Bengal Route",48,96,active,2026-09-27T22:15:00Z
+CP_IND_005,Visakhapatnam Port,equipment_failure,high,"India-East Asia Route,Bay of Bengal Route",62,30,active,2026-09-28T04:20:00Z
+CP_IND_006,Ganga Waterway NW-1 (Varanasi-Haldia),low_water_levels,high,"Kolkata-Varanasi Waterway,North India Inland",65,120,active,2026-09-26T09:00:00Z
+CP_IND_007,Kochi Port Kerala,monsoon_disruption,high,"India-Gulf Route,India-East Africa Route",51,54,active,2026-09-28T00:30:00Z
+CP_IND_008,Kandla (Deendayal) Port,hazmat_incident,critical,"India-Gulf Route,Gujarat Coastal Route",80,96,active,2026-09-28T05:10:00Z
+CP_IND_009,Tuticorin (V.O. Chidambaranar) Port,labour_strike,medium,"India-Sri Lanka Route,India-SE Asia Route",42,72,active,2026-09-27T18:45:00Z
+CP_IND_010,Paradip Port Odisha,cyclone_warning,high,"Bay of Bengal Route,India-East Asia Route",58,60,active,2026-09-28T03:50:00Z
+CP_IND_011,Delhi-NCR ICD Tughlakabad,customs_backlog,medium,"North India Corridor,Delhi-JNPT Rail Route",38,18,active,2026-09-28T06:00:00Z
+CP_IND_012,Dedicated Freight Corridor (Rewari-Palanpur),track_maintenance,medium,"Delhi-JNPT Rail Route,North-West Freight Corridor",33,30,active,2026-09-27T20:00:00Z
+CP_IND_013,Pune-Mumbai Expressway,monsoon_flooding,high,"Western India Corridor,Pune-JNPT Route",52,24,active,2026-09-28T04:45:00Z
+CP_IND_014,Bengaluru Air Cargo (KIAL),peak_season_surge,medium,"India-International Air Routes,South India Air Feeder",35,12,active,2026-09-28T05:30:00Z
+CP_IND_015,Hyderabad Warehouse Cluster (Medchal),regulatory_inspection,low,"Hyderabad-Bengaluru Corridor,South India Routes",18,6,active,2026-09-28T06:15:00Z
+CP_IND_016,Ludhiana Industrial Hub Punjab,power_shortage,medium,"Punjab Industrial Routes,North India Corridor",24,8,active,2026-09-28T02:55:00Z
+CP_IND_017,Ahmedabad Textile Cluster,supplier_delay,low,"Gujarat Routes,Western India Corridor",15,10,active,2026-09-27T16:20:00Z
+CP_IND_018,Guwahati ICD Assam,border_clearance,medium,"North-East India Routes,India-Bangladesh Route",40,24,active,2026-09-28T01:05:00Z
+CP_IND_019,Indore Rail Junction Madhya Pradesh,rolling_stock_shortage,medium,"Central India Rail Routes,Delhi-JNPT Rail Route",28,20,active,2026-09-27T23:40:00Z
+CP_IND_020,Attari-Wagah Land Port Punjab,regulatory_closure,low,"India-Central Asia Land Route",22,16,active,2026-09-27T14:00:00Z

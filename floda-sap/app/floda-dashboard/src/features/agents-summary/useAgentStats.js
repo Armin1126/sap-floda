@@ -1,0 +1,1 @@
+export default function useAgentStats(rankings=[]){const auto=rankings.filter(r=>r.allocated==='Y').length;return{autoRate:rankings.length?auto/rankings.length:0,escalationRate:rankings.length?(rankings.length-auto)/rankings.length:0}}
